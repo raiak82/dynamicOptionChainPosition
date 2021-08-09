@@ -1,0 +1,17 @@
+# DO NOT include azure-functions-worker in this file
+# The Python Worker is managed by Azure Functions platform
+# Manually managing azure-functions-worker may cause unexpected issues
+
+azure-functions
+requests
+datetime
+python-dateutil
+azure-storage-blob
+azure-storage
+quantsbin==1.0.3
+scipy==1.6.3
+pandas==1.2.4
+matplotlib==3.4.2
+numpy==1.18.0
+jinja2
+lxml
