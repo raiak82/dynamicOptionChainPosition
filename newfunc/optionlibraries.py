@@ -1,4 +1,3 @@
-
 import requests
 import pandas as pd
 from datetime import datetime
@@ -8,6 +7,7 @@ from quantsbin.derivativepricing.namesnmapper import VanillaOptionType, ExpiryTy
 from datetime import date
 from lxml import html
 from lxml.etree import tostring
+from bs4 import BeautifulSoup
 
 DIV_YIELD= 0.0344 # RBI Dividend yield
 def marketStatus():
@@ -139,11 +139,10 @@ def dowfuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    dow_fut = tree.xpath('//span[@id="last_last"]/text()')
-    dow_fut_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[2]/text()')
-    dow_fut_perc_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[4]/text()')
-    
-    return(dow_fut[0],dow_fut_change[0],dow_fut_perc_change[0])
+    dow_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    dow_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    dow_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    return(dow_fut[0],dow_fut_change[0],dow_fut_perc_change[1])
 
 def nikkeifuture():
     url="https://www.investing.com/indices/japan-225-futures"
@@ -156,10 +155,10 @@ def nikkeifuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    nik_fut = tree.xpath('//span[@id="last_last"]/text()')
-    nik_fut_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[2]/text()')
-    nik_fut_perc_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[4]/text()')
-    return(nik_fut[0],nik_fut_change[0],nik_fut_perc_change[0])
+    nik_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    nik_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    nik_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    return(nik_fut[0],nik_fut_change[0],nik_fut_perc_change[1])
 
 def ftseFuture():
     url="https://www.investing.com/indices/uk-100-futures"
@@ -172,10 +171,10 @@ def ftseFuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    ftse_fut = tree.xpath('//span[@id="last_last"]/text()')
-    ftse_fut_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[2]/text()')
-    ftse_fut_perc_change=tree.xpath('//*[@id="quotes_summary_current_data"]/div[1]/div[2]/div[1]/span[4]/text()')
-    return(ftse_fut[0],ftse_fut_change[0],ftse_fut_perc_change[0])
+    ftse_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    ftse_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    ftse_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    return(ftse_fut[0],ftse_fut_change[0],ftse_fut_perc_change[1])
 
 
 def indiavix():
@@ -240,3 +239,24 @@ def color_negative_red(value):
     color = 'black'
 
   return 'color: %s' % color
+
+
+def fiidata():
+    
+    url = 'https://www.fpi.nsdl.co.in/web/Reports/Latest.aspx'
+    
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'lxml')
+    
+    # get all tables
+    tables = soup.find_all('table')
+    
+    rows = tables[1].find_all('tr')
+    for row in rows:
+        columns = row.find_all('td')
+        row_val=([column.text.strip() for column in columns])
+        if "Index Options" in row_val:
+            IndexBuy=row_val[2]
+            IndexSell=row_val[4]
+            FIIData=float(IndexBuy)-float(IndexSell)
+    return(str(int(FIIData)) + " Cr") 

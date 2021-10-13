@@ -18,7 +18,7 @@ account_name = 'optiontablestorage'
 account_key = 'eURoD2XMmUgt7zuY9jX9IPXs9WhO5xCkU2du8gcibAdAeGFTmQUKVbyKy+MIN3UQxAu/AV6SMkzmVpimibI2EQ=='
 mycontainer="opt-table"
 
-
+nifty_lotsize=50
 
 def main(req: func.HttpRequest,  context: func.Context) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
@@ -30,12 +30,12 @@ def main(req: func.HttpRequest,  context: func.Context) -> func.HttpResponse:
     str_next_thursday_expiry,_=optionlibraries.nextThu_and_lastThu_expiry_date()
     pcr,timestamp,niftySpot,df_call_near_expiry,df_put_near_expiry=optionlibraries.optionChain(str_next_thursday_expiry)
     df_call_near_expiry=df_call_near_expiry.drop(['identifier','pChange','underlying','bidprice','askQty','askPrice','totalSellQuantity','bidQty','change','totalBuyQuantity'], axis = 1)
-    df_call_near_expiry['changeinOpenInterest']=75 * pd.to_numeric(df_call_near_expiry['changeinOpenInterest'])
-    df_call_near_expiry['openInterest'] = 75 * pd.to_numeric(df_call_near_expiry['openInterest'])
+    df_call_near_expiry['changeinOpenInterest']=nifty_lotsize * pd.to_numeric(df_call_near_expiry['changeinOpenInterest'])
+    df_call_near_expiry['openInterest'] = nifty_lotsize * pd.to_numeric(df_call_near_expiry['openInterest'])
     df_call_near_expiry=df_call_near_expiry.nlargest(5, ['openInterest'])
     df_put_near_expiry=df_put_near_expiry.drop(['identifier','pChange','underlying','bidprice','askQty','askPrice','totalSellQuantity','bidQty','change','totalBuyQuantity'], axis = 1)
-    df_put_near_expiry['openInterest'] = 75 * pd.to_numeric(df_put_near_expiry['openInterest'])
-    df_put_near_expiry['changeinOpenInterest']=75 * pd.to_numeric(df_put_near_expiry['changeinOpenInterest'])
+    df_put_near_expiry['openInterest'] = nifty_lotsize * pd.to_numeric(df_put_near_expiry['openInterest'])
+    df_put_near_expiry['changeinOpenInterest']=nifty_lotsize * pd.to_numeric(df_put_near_expiry['changeinOpenInterest'])
     df_put_near_expiry=df_put_near_expiry.nlargest(5, ['openInterest'])
 
     #market Status
@@ -100,8 +100,10 @@ def main(req: func.HttpRequest,  context: func.Context) -> func.HttpResponse:
     column_names = ["Current Market parameters","Value"]
     df_mark_par = pd.DataFrame(columns = column_names)
     indVix=optionlibraries.indiavix()
+    fiidata=optionlibraries.fiidata()
     df_mark_par.loc[len(df_mark_par.index)] = ["India VIX",indVix] 
     df_mark_par.loc[len(df_mark_par.index)] = ["Put Call Ratio (PCR)",pcr] 
+    df_mark_par.loc[len(df_mark_par.index)] = ["FII Index Options (previous day)",fiidata] 
     df_mark_par= df_mark_par.style.hide_index().applymap(optionlibraries.color_negative_red, subset=['Value']).render()
 
     if "-" in marketStatusValue:
