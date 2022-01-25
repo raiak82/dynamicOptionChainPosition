@@ -11,7 +11,7 @@ High level design of different core components built on Azure Cloud leveraging A
 3) Plots to show Option Pain and top 5 Call/Put option
 4) Dynamic Option Strategy- curated option strategy (Reference for multi-option plotter https://github.com/hashABCD/opstrat
 
-Set up Instructions:
+# Set up Instructions:
 
 1) Install Visual Studio Code
 2) Clone repository from github link- https://github.com/raiak82/dynamicOptionChainPosition.git
