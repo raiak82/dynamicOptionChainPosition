@@ -139,9 +139,9 @@ def dowfuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    dow_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
-    dow_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
-    dow_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    dow_fut = tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    dow_fut_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    dow_fut_perc_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
     return(dow_fut[0],dow_fut_change[0],dow_fut_perc_change[1])
 
 def nikkeifuture():
@@ -155,9 +155,9 @@ def nikkeifuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    nik_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
-    nik_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
-    nik_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    nik_fut = tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    nik_fut_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    nik_fut_perc_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
     return(nik_fut[0],nik_fut_change[0],nik_fut_perc_change[1])
 
 def ftseFuture():
@@ -171,9 +171,9 @@ def ftseFuture():
     tree = html.fromstring(res.content)  
   
     # Get element using XPath
-    ftse_fut = tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
-    ftse_fut_change=tree.xpath('///*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
-    ftse_fut_perc_change=tree.xpath('//*[@id="__next"]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
+    ftse_fut = tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/span/text()')
+    ftse_fut_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[1]/text()')
+    ftse_fut_perc_change=tree.xpath('//*[@id="__next"]/div[2]/div/div/div[2]/main/div/div[1]/div[2]/div[1]/div[2]/span[2]/text()')
     return(ftse_fut[0],ftse_fut_change[0],ftse_fut_perc_change[1])
 
 
