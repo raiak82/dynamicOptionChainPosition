@@ -16,3 +16,5 @@ numpy==1.18.0
 jinja2
 lxml
 bs4
+yfinance
+azure-data-tables

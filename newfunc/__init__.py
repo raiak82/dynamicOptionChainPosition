@@ -13,9 +13,10 @@ from azure.storage.blob import BlockBlobService,ContentSettings
 from . import optionlibraries
 from datetime import date
 import jinja2
+from . import optionStrategy
 
 account_name = 'optiontablestorage'
-account_key = 'eURoD2XMmUgt7zuY9jX9IPXs9WhO5xCkU2du8gcibAdAeGFTmQUKVbyKy+MIN3UQxAu/AV6SMkzmVpimibI2EQ=='
+account_key = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
 mycontainer="opt-table"
 
 nifty_lotsize=50
@@ -111,7 +112,7 @@ def main(req: func.HttpRequest,  context: func.Context) -> func.HttpResponse:
     else:
         colorvalue = 'green'
 
-    htmltemplate= "<head> <title>Dynamic Option Strategy</title></head>" + "\n" +"<h2> Nifty Spot : <b style=\"color:" + colorvalue+ "\">" + str(niftySpot) + "\t" +"<i>" + str(marketStatusValue) + "</i> </b>" + "| Market Status : " + str(marketStatus) + " | Last Updated Time : " + timestamp + "</h2> <h3>" + df_global + "</h3><h3>" + df_mark_par + "</h3><style> h3 { text-align: right;} </style><h3>  <a href=\"http://20.102.61.30/\">Option Strategy</a> </h3>"
+    htmltemplate= "<head> <title>Dynamic Option Strategy</title></head>" + "\n" +"<h2> Nifty Spot : <b style=\"color:" + colorvalue+ "\">" + str(niftySpot) + "\t" +"<i>" + str(marketStatusValue) + "</i> </b>" + "| Market Status : " + str(marketStatus) + " | Last Updated Time : " + timestamp + "</h2> <h3>" + df_global + "</h3><h3>" + df_mark_par + "</h3>"
     tmpvarcall="<h4> Top 5 Strike price of Call Option based on Open Interest for Expiry Date = "+str_next_thursday_expiry + " </h4>"
     tmpvarput="<h4> Top 5 Strike price of Put  Option based on Open Interest for Expiry Date = "+str_next_thursday_expiry + " </h4>"
     df_put_near_expiry=df_put_near_expiry.rename({'strikePrice': 'Strike Price', 'expiryDate': 'Option Expiry Date','openInterest':'Open Interest (OI)','changeinOpenInterest':'Change in OI','pchangeinOpenInterest':'% Change in OI','totalTradedVolume':'Traded Volume','impliedVolatility':'IV','lastPrice':'Price'}, axis=1)
@@ -134,8 +135,8 @@ def main(req: func.HttpRequest,  context: func.Context) -> func.HttpResponse:
 
      
     filename = os.path.join(temp_path, 'index.html')
-    tobePrinted= htmltemplate + "<style> h4 {text-align:center;} </style> <h4> Option Chain data for " + str_next_thursday_expiry + " </h4>"+ "\n" +"\n" + tmpvarcall + "\n" + "\n" + call_render   + "<h5>" + "<img src='https://optiontablestorage.blob.core.windows.net/opt-table/callchartOI.png'>"+ "</h4>" + "\n===========================================================" + "\n\n" + "\n" +"\n" + tmpvarput + "\n" + "\n" + put_render + "\n" + "<h4>" + "<img src='https://optiontablestorage.blob.core.windows.net/opt-table/putchartOI.png'> =========================================================== </h4>"
-   
+    tobePrinted= htmltemplate + "<style> h4 {text-align:center;} </style> <h4> Option Chain data for " + str_next_thursday_expiry + " </h4>"+ "\n" +"\n" + tmpvarcall + "\n" + "\n" + call_render   + "<h4>" + "<img src='https://optiontablestorage.blob.core.windows.net/opt-table/callchartOI.png'>"+ "</h4>"  +"\n" + tmpvarput + "\n" + "\n" + put_render + "\n" + "<h4>" + "<img src='https://optiontablestorage.blob.core.windows.net/opt-table/putchartOI.png'> </h4>"
+    tobePrinted = tobePrinted + optionStrategy.optionStrategy()
     
     text_file = open(filename, "w", encoding='utf8')
     text_file.write(tobePrinted)
